@@ -7,7 +7,6 @@ public:
 	int a,b,c,d;
 	smp(int e,int f,int g,int h):a(e),b(f),c(g),d(h){}
 };
-
 typedef char ch[100];
 int main(){
 	int a,b;
@@ -23,37 +22,39 @@ int main(){
 		}
 		cin>>t[i][b-1];
 	}
-	for(int j=0;j<b;j++){
+/*	for(int j=0;j<b;j++){
 		for(int i=0;i<a-1;i++){
 			for(int k=i+1;k<a;k++){
 				if(strcmp(t[i][j],t[k][j])==0){
-//					s.push_back(smp(i,j,k,j));
 					for(int d=0;d<s.size();d++){
 						if(i==s[d].a && k == s[d].c){
 							cout<<"NO"<<endl;
 							cout<<i+1<<" "<<k+1<<endl;
-							cout<<s[d].d<<" "<<j+1<<endl;
+							cout<<s[d].d+1<<" "<<j+1<<endl;
+							return 0;
 						}
 					}
 					s.push_back(smp(i,j,k,j));
 				}
 			}
 		}
-	}
-/*	while(!s.empty()){
-		smp p=s.back();
-		s.pop_back();
-		for(int i=0;i<s.size();i++){
-			smp q(s[i]);
-			if(p.a==q.a && p.c == q.c){
-				cout<<"NO"<<endl;
-				cout<<p.a+1<<" "<<p.c+1<<endl;
-				cout<<q.d+1<<" "<<p.d+1<<endl;
-				return 0;
+	}*/
+	for(int i=0;i<a-1;i++){
+		for(int k=i+1;k<a;k++){
+			int flag=-1;
+			for(int j=0;j<b;j++){
+				if(strcmp(t[i][j],t[k][j])==0){
+					if(flag==-1) flag=j;
+					else{
+						cout<<"NO"<<endl;
+						cout<<i+1<<" "<<k+1<<endl;
+						cout<<flag+1<<" "<<j+1<<endl;
+						return 0;
+					}
+				}
 			}
 		}
 	}
-	*/
 	cout<<"YES"<<endl;
 	return 0;
 }
