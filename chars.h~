@@ -36,6 +36,7 @@ public:
 		}
 		else{ c=NULL; length=0; }
 	}
+	char&(){ return c[0]; }
 	void insert(char *p,int index){   // insert from "0" position
 		if(p){
 			char* t=c;
@@ -70,9 +71,6 @@ public:
 		}
 	}
 	int len(){ return length; }
-	char* get(int index=0){
-		return c+index;
-	}
 protected:
 public:
 
