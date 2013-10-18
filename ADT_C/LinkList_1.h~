@@ -1,0 +1,177 @@
+#ifndef __LINK_LIST_H__
+#define __LINK_LIST_H__
+
+#include <stdlib.h>
+
+
+typedef int ElemType ;
+typedef struct LNode{          // 不带头结点的
+	ElemType  data;
+	struct LNode *next;
+}LNode , *LinkList;
+typedef int Status ;
+const int ERROR=0;
+const int OK=1;
+const int OVERFLOW=-1;
+
+Status InitList_L(LinkList& L);
+void DestroyList_L(LinkList& L);
+Status ClearList_L(LinkList& L);
+bool ListEmpty_L(LinkList L);
+int ListLength_L(LinkList L);
+bool GetElem_L(LinkList L,int i,ElemType &e);
+int LocateElem_L(LinkList L,ElemType e,bool (*compare)(ElemType,ElemType));
+bool compare_default_L(ElemType,ElemType);
+bool PriorElem_L(LinkList L,ElemType cur_e,ElemType& pre_e);
+bool NextElem_L(LinkList L,int i,ElemType& e);
+Status ListInsert_L(LinkList& L,int i,ElemType e);
+bool ListDelete_L(LinkList& L,int i,ElemType& e);
+bool ListTraverse_L(LinkList L,bool (*visit)(ElemType));
+
+Status InitList_L(LinkList& L){
+	L=NULL;
+}
+void DestroyList_L(LinkList& L){
+	LNode *p=L;
+	LNode *q;
+	while(p!=NULL){
+		q=p;
+		p=p->next;
+		free(q);
+	}
+	L=NULL;
+}
+
+Status ClearList_L(LinkList& L){
+	DestroyList_L(L);
+	return OK;
+}
+
+bool ListEmpty_L(LinkList L){
+	if(L!=NULL){
+		return false;
+	}
+	else{
+		return true;
+	}
+}
+int ListLength_L(LinkList L){
+	LNode *p=L;
+	int ret=0;
+	while(p!=NULL){
+		p=p->next;
+		ret++;
+	}
+	return ret;
+}
+bool GetElem_L(LinkList L,int i,ElemType &e){
+	if(i>=1 && i<=ListLength_L(L)){
+		LNode *p=L;
+		i--;
+		while(i>0 && p!=NULL){  // p != NULL 其实可以省略
+			p=p->next;
+			i--;
+		}
+		if(i==0 && p!=NULL){
+			e=p->data;
+			return true;
+		}
+	}
+	return false;
+}
+int LocateElem_L(LinkList L,ElemType e,bool (*compare)(ElemType,ElemType)){
+	LNode *p=L;
+	int i=1;
+	while(p!=NULL){
+		if(compare(p->data,e)!=false){
+			return i;
+		}
+		i++;
+		p=p->next;
+	}
+	return 0;
+}
+bool compare_default_L(ElemType a,ElemType b){
+	if(a==b){ return true; }
+	else{ return false; }
+}
+bool PriorElem_L(LinkList L,ElemType cur_e,ElemType& pre_e){
+	LNode *p=L;
+	LNode *q=NULL;
+	if(p->next==NULL){
+		return false;
+	}
+	q=p;
+	p=p->next;
+	while(p!=NULL){
+		if(compare_default_L(p->data,cur_e)){
+			pre_e = q->data;
+			return true;
+		}
+		q=p;
+		p=p->next;
+	}
+	return false;
+}
+bool NextElem_L(LinkList L,ElemType cur_e,ElemType& next_e){
+	LNode *p=L;
+	while(p!=NULL){
+		if(compare_default_L(p->data,cur_e)){
+			if(p->next!=NULL){
+				next_e=p->next->data;
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		p=p->next;
+	}
+	return false;
+}
+Status ListInsert_L(LinkList& L,int i,ElemType e){
+	if(i>=1 && i<=ListLength_L(L)+1){
+		LNode *q=(LNode*)malloc(sizeof(LNode));
+		if(q==NULL){
+			return OVERFLOW;
+		}
+		q->data=e;
+		if(i==1){
+			q->next=L;
+			L->next=q;
+		}
+		else{
+			LNode *p=L;
+			while(i>2){
+				p=p->next;
+				i--;
+			}
+			q->next=p->next;
+			p->next=q;
+		}
+		return OK;
+	}
+	return ERROR;
+}
+bool ListDelete_L(LinkList& L,int i,ElemType& e){
+	if(i>=1 && i<=ListLength_L(L)){
+		LNode* p=L;
+		if(i==1){
+			e=L->data;
+			L=L->next;
+			free(p);
+		}
+		else{
+			while(i>2){
+				p=p->next;
+				i--;
+			}
+			LNode *q=p->next;
+			p->next=p->next->next;
+			free(q);
+		}
+		return true;
+	}
+	return false;
+}
+#endif
