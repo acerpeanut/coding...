@@ -23,7 +23,7 @@ bool GetElem_L(LinkList L,int i,ElemType &e);
 int LocateElem_L(LinkList L,ElemType e,bool (*compare)(ElemType,ElemType));
 bool compare_default_L(ElemType,ElemType);
 bool PriorElem_L(LinkList L,ElemType cur_e,ElemType& pre_e);
-bool NextElem_L(LinkList L,int i,ElemType& e);
+bool NextElem_L(LinkList L,ElemType cur_e,ElemType& next_e);
 Status ListInsert_L(LinkList& L,int i,ElemType e);
 bool ListDelete_L(LinkList& L,int i,ElemType& e);
 bool ListTraverse_L(LinkList L,bool (*visit)(ElemType));
@@ -173,5 +173,15 @@ bool ListDelete_L(LinkList& L,int i,ElemType& e){
 		return true;
 	}
 	return false;
+}
+bool ListTraverse_L(LinkList L,bool (*visit)(ElemType)){
+	LNode* p=L;
+	while(p!=NULL){
+		if(!visit(p->data)){
+			return false;
+		}
+		p=p->next;
+	}
+	return true;
 }
 #endif

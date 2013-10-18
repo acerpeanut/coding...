@@ -14,7 +14,7 @@ typedef struct{
 	int listSize;
 }SqList;
 typedef int Status ;
-const int ERROR 0;
+const int ERROR=0;
 const int OK=1;
 const int OVERFLOW=-1;
 

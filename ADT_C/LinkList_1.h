@@ -138,7 +138,7 @@ Status ListInsert_L(LinkList& L,int i,ElemType e){
 		q->data=e;
 		if(i==1){
 			q->next=L;
-			L->next=q;
+			L=q;
 		}
 		else{
 			LNode *p=L;

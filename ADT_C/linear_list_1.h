@@ -152,7 +152,7 @@ bool ListDelete(SqList &L,int i,ElemType &e){
 		int j;
 		i--;
 		e = L.elem[i];
-		for(j=i;j<L.length-2;j++){
+		for(j=i;j<L.length-1;j++){
 			L.elem[j] = L.elem[j+1];
 		}
 		L.length--;
