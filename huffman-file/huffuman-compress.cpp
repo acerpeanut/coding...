@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+typedef struct node{
+	int sum;
+	int flag;
+	struct node* left;
+	struct node* right;
+}node;
+
+void init(node*p){ p->left=p->right=NULL; p->sum=0; p->flag=0; }
+void copy(node*a,node*b){ 
+	a->sum=b->sum;
+	a->flag=b->flag;
+	a->left=b->left;
+	a->right=b->right;
+}
+void huffman(node*p,int i){
+	if(i>=2){
+	for(int j=0;j<i-1;j++){
+		for(int k=j+1;k<i;k++){
+			if(p[j].sum<p[k].sum){
+				node tmp;
+				copy(&tmp,&p[j]);
+				copy(&p[j],&p[k]);
+				copy(&p[k],&tmp);
+			}
+		}
+	}
+	p[i-1].flag=0;
+	p[i-2].flag=1;
+	node* q=(node*)malloc(sizeof(node)*2);
+	copy(&q[0],&p[i-1]);
+	copy(&q[1],&p[i-2]);
+	p[i-2].left=&q[0];
+	p[i-2].right=&q[1];
+	p[i-2].sum=q[0].sum+q[1].sum;
+	huffman(p,i-1);
+	}
+}
+bool display(node *a,char* s,int num){
+	if(a->left && a->right){
+		char* s1=(char*)malloc(sizeof(char)*100);
+		s[strlen(s)+1]=0;
+		s[strlen(s)]=a->flag+'0';
+
+		strcpy(s1,s);
+		display(a->left,s,num);
+		display(a->right,s1,num);
+	}
+	else{
+		if(a->sum==num){
+			printf("%d：%s%d\n",a->sum,s,a->flag);
+		}
+		free(s);
+	}
+}
+int main(){
+	int count;
+	node huf[10];
+	int num[10];
+	int n;
+	node* p;
+	char *s,*s1;
+	scanf("%d",&count);
+	for(int j=0;j<count;j++){
+		scanf("%d",&n);
+		for(int i=0;i<n;i++){
+			scanf("%d",&num[i]);
+			init(&huf[i]);
+			huf[i].sum=num[i];
+		}
+		huffman(huf,n);
+		for(int i=0;i<n;i++){
+			s=(char*)malloc(sizeof(char)*100);
+			s1=(char*)malloc(sizeof(char)*100);
+			s[0]=s1[0]=0;
+			display(huf[0].left,s,num[i]);
+			display(huf[0].right,s1,num[i]);
+		}
+	}
+	return 0;
+}

@@ -46,4 +46,10 @@ exit(1);
 }
 }
 }
+bool connect(){
+	if(::connect(sockfd,(struct sockaddr*)&srv,sizeof(struct sockaddr))==-1){
+		return false;
+	}
+	return true;
+}
 };
