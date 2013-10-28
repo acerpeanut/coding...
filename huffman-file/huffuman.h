@@ -1,3 +1,6 @@
+#ifndef _HUFFUMAN_H_
+#define _HUFFUMAN_H_
+
 #include "bigInt.h"
 #include <string.h>
 typedef struct node{
@@ -56,3 +59,4 @@ void display(node *a,char* s){
 		free(s);
 	}
 }
+#endif

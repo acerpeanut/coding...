@@ -20,7 +20,7 @@ void huffuman(node**p,int i){
 		for(j=0;j<2;j++){
 			for(k=0;k<i-j-1;k++){
 				if(greatThan(&(p[k]->sum),&(p[k+1]->sum))<=0){
-					node* tmp=p[k];
+					node* tmp=p[k+1];
 					p[k+1]=p[k];
 					p[k]=tmp;
 				}
