@@ -98,3 +98,11 @@ int encode_tree(char*filename,char*output){
 	s=(char*)malloc(sizeof(char)*100);
 	s[0]=0;
 	get(Swp,p[0],q,s);
+
+	for(i=0;i<256;i++){
+		fwrite(Swp[i].s,100,1,fq);
+	}
+	fclose(fq);
+	fclose(fp);
+	return 0;
+}

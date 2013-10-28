@@ -46,9 +46,14 @@ int main(int argc,char*argv[]){
 	int len=strlen(input);
 	if(dec==0){
 		/* 编码所生成的中间文件，解码所依赖的文件  */
-	       	dec=(char*)malloc(sizeof(char)*(len+2));
+	       	dec=(char*)malloc(sizeof(char)*(len+5));
 		strcpy(dec,input);
-		strcpy(dec+len,".enc");
+		if(strcmp(dec+len-3,".hf")==0){
+			strcpy(dec+len-3,".enc");
+		}
+		else{
+			strcpy(dec+len,".enc");
+		}
 	}
 	if(output==0){
 	       	output=(char*)malloc(sizeof(char)*(len+5));
