@@ -1,10 +1,13 @@
 #include <stdio.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <string.h>
 #include <netdb.h>
+
+#define BUF_SIZE 10000
 void print(char*s,int len){
-	char a[1000];
+	char a[BUF_SIZE];
 	char *p=a;
 	while(len-->0){
 		*(p++)=*(s++);
@@ -12,10 +15,15 @@ void print(char*s,int len){
 	*p=0;
 	printf("%s",a);
 }
-void webget(char* url){
+void webget(char* url,char* output){
 	int i=0,j;
-	char w[100],g[100],s[1000];
-	while(*url!='/'){ w[i++]=*url; url++; }
+	char w[100],g[100],s[BUF_SIZE];
+	if(strncmp(url,"http://",7)==0){
+		url+=7;
+	}
+	while(*url!='/' && *url){ w[i++]=*url; url++; }
+	if(*url==0) *(--url)='/'; 
+
 	w[i++]=0;
 
 	struct hostent* phost=gethostbyname(w);
@@ -33,17 +41,47 @@ void webget(char* url){
 	connect(fd,(struct sockaddr*)&web,sizeof(web));
 	send(fd,s,strlen(s),0);
 
+	FILE*fp;
+	if(output){ 
+		fp=fopen(output,"wb");
+		if(!fp){ perror("open output file"); close(fd); return ; }
+	}
+
 	i=0;
+	int k=1;
+	char *t;
 	do{
-		i=recv(fd,s,1000,0);
-		if(i>0){ printf("receive : %d\n",i); print(s,i); printf("\n"); }
+		i=recv(fd,s,BUF_SIZE,0);
+		if(i>0){ 
+			printf("receive : %d\n",i); 
+			if(output){
+				t=s;
+				if(k){
+					while((*(t++)!='\r')||(strncmp(t,"\n\r\n",3)!=0));
+					t+=3,k=0;
+					print(s,t-s);
+					printf("\n");
+				}
+				while((j=fwrite(t,1,i,fp))<i){
+					t+=j, i-=j;
+				}
+			}
+			else{
+			       	print(s,i); 
+			}
+			printf("\n"); 
+		}
 		else if(i==0){ printf("i==0 ; break\n"); break; }
 		else if(i==-1){ printf("i==-1 ; break; \n"); break; }
 		else break;
 	}while(1);
+	close(fd);
+	if(output) fclose(fp);
 }
 
 int main(){
-	webget("www.baidu.com/");
+	char url[256];
+	scanf("%s",url);
+	webget(url,"a.txt");
 	return 0;
 }
