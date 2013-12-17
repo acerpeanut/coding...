@@ -86,3 +86,10 @@ public:
 	int len(){ return length; }
 
 };
+
+template <class T>
+class array_t: public array{
+	void push(T a){
+		array::push(new T(a));
+	}
+};
